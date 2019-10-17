@@ -6,9 +6,14 @@ const template = require("fs").readFileSync("./index.html", "utf-8");
 const renderer = createRenderer({
   template,
   directives: {
-    example(node) {
+    custom(node) {
       node.data.style = {
         color: "green"
+      };
+    },
+    show(node) {
+      node.data.style = {
+        color: "blue"
       };
     }
   }
@@ -20,15 +25,25 @@ server.get("*", (req, res) => {
   });
 
   Vue.component("World", {
-    template: `<div v-example>Am i green?</div>`
+    template: `<div v-custom>Am i green?</div>`
+  });
+
+  Vue.component("Foo", {
+    template: `<div>Am i blue?</div>`
+  });
+
+  Vue.component("Bar", {
+    template: `<div v-show>Am i blue?</div>`
   });
 
   const app = new Vue({
     template: `
     <main>
       <h2>Green text = directive 👍</h2>
-      <Hello v-example/>
+      <Hello v-custom/>
       <World/>
+      <Foo v-show/>
+      <Bar/>
     </main>`
   });
 
